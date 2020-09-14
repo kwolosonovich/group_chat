@@ -47,6 +47,12 @@ class ChatUser {
     });
   }
 
+  /** handle joke */
+
+  handleJoke() {
+    this.
+  }
+
   /** Handle messages from client:
    *
    * - {type: "join", name: username} : join
@@ -57,6 +63,7 @@ class ChatUser {
     let msg = JSON.parse(jsonData);
 
     if (msg.type === 'join') this.handleJoin(msg.name);
+    else if (msq.text === 'joke') this.handleJoke()
     else if (msg.type === 'chat') this.handleChat(msg.text);
     else throw new Error(`bad message: ${msg.type}`);
   }
