@@ -20,6 +20,7 @@ class ChatUser {
 
   send(data) {
     try {
+      console.log('send(data) called')
       this._send(data);
     } catch {
       // If trying to send to a user fails, ignore it
@@ -40,6 +41,7 @@ class ChatUser {
   /** handle a chat: broadcast to room. */
 
   handleChat(text) {
+    console.log('handleChat called')
     this.room.broadcast({
       name: this.name,
       type: 'chat',
@@ -50,7 +52,13 @@ class ChatUser {
   /** handle joke */
 
   handleJoke() {
-    this.
+    console.log("handleJoke called");
+    this._send({
+      name: this.name,
+      type: 'joke',
+      text: "What do you call eight hobbits? A hob-byte!"
+    }
+)
   }
 
   /** Handle messages from client:
@@ -60,10 +68,13 @@ class ChatUser {
    */
 
   handleMessage(jsonData) {
+    
+    console.log("handleMessage called");
+
     let msg = JSON.parse(jsonData);
 
     if (msg.type === 'join') this.handleJoin(msg.name);
-    else if (msq.text === 'joke') this.handleJoke()
+    else if (msg.text === 'joke') this.handleJoke();
     else if (msg.type === 'chat') this.handleChat(msg.text);
     else throw new Error(`bad message: ${msg.type}`);
   }

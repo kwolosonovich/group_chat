@@ -21,24 +21,30 @@ ws.onopen = function(evt) {
 /** called when msg received from server; displays it. */
 
 ws.onmessage = function(evt) {
-  console.log("message", evt);
-
+  console.log("onmessage called");
   let msg = JSON.parse(evt.data);
   let item;
 
   if (msg.type === "note") {
     item = $(`<li><i>${msg.text}</i></li>`);
+      $("#messages").append(item);
+
   }
 
   else if (msg.type === "chat") {
     item = $(`<li><b>${msg.name}: </b>${msg.text}</li>`);
-  }
+      $("#messages").append(item);
 
-  else {
+  } else if (msg.type === "joke") {
+    console.log("else if joke called")
+    item = $(`<li><b>${msg.name}: </b>${msg.text}</li>`);
+    `${msg.name}.append(${item})`
+
+  } else {
     return console.error(`bad message: ${msg}`);
   }
 
-  $('#messages').append(item);
+  // $('#messages').append(item);
 };
 
 
@@ -61,15 +67,25 @@ ws.onclose = function (evt) {
 $('form').submit(function (evt) {
   evt.preventDefault();
 
+    console.log("submit called");
   let data;
 
+  let joke = "What do you call eight hobbits? A hob-byte!";
+
   if ($('#m').val() === '/joke') {
-    data = { type: "joke", text: $("#m").val() };
-    console.log('true')
+    data = { type: "chat", text: joke };
+    console.log('type:', data.type)
   } else {
     data = { type: "chat", text: $("#m").val() };
   }
+
+  // let data = { type: "chat", text: $("#m").val() };
+
+  console.log("data after if", data);
+
   ws.send(JSON.stringify(data));
+  console.log("data after ws.send", data);
+  // console.log('submit called after send')
 
   $('#m').val('');
 });
