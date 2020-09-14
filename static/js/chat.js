@@ -73,7 +73,7 @@ $('form').submit(function (evt) {
   let joke = "What do you call eight hobbits? A hob-byte!";
 
   if ($('#m').val() === '/joke') {
-    data = { type: "chat", text: joke };
+    data = { type: "joke", text: joke };
     console.log('type:', data.type)
   } else {
     data = { type: "chat", text: $("#m").val() };
