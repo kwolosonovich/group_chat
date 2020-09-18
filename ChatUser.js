@@ -1,3 +1,4 @@
+
 /** Functionality related to chatting. */
 
 // Room is an abstraction of a chat channel
@@ -20,7 +21,6 @@ class ChatUser {
 
   send(data) {
     try {
-      console.log('send(data) called')
       this._send(data);
     } catch {
       // If trying to send to a user fails, ignore it
@@ -33,32 +33,29 @@ class ChatUser {
     this.name = name;
     this.room.join(this);
     this.room.broadcast({
-      type: 'note',
-      text: `${this.name} joined "${this.room.name}".`
+      type: "note",
+      text: `${this.name} joined "${this.room.name}".`,
     });
   }
 
   /** handle a chat: broadcast to room. */
 
   handleChat(text) {
-    console.log('handleChat called')
     this.room.broadcast({
       name: this.name,
-      type: 'chat',
-      text: text
+      type: "chat",
+      text: text,
     });
   }
 
   /** handle joke */
 
-  handleJoke() {
-    console.log("handleJoke called");
-    this._send({
+  handleJoke(text) {
+    this.room.broadcast({
       name: this.name,
-      type: 'joke',
-      text: "What do you call eight hobbits? A hob-byte!"
-    }
-)
+      type: "joke",
+      text: "What do you call eight hobbits? A hob-byte!",
+    });
   }
 
   /** Handle messages from client:
@@ -68,14 +65,11 @@ class ChatUser {
    */
 
   handleMessage(jsonData) {
-    
-    console.log("handleMessage called");
-
     let msg = JSON.parse(jsonData);
 
-    if (msg.type === 'join') this.handleJoin(msg.name);
-    else if (msg.text === 'joke') this.handleJoke();
-    else if (msg.type === 'chat') this.handleChat(msg.text);
+    if (msg.type === "join") this.handleJoin(msg.name);
+    else if (msg.type === "joke") this.handleChat(msg.text);
+    else if (msg.type === "chat") this.handleChat(msg.text);
     else throw new Error(`bad message: ${msg.type}`);
   }
 
@@ -84,8 +78,8 @@ class ChatUser {
   handleClose() {
     this.room.leave(this);
     this.room.broadcast({
-      type: 'note',
-      text: `${this.name} left ${this.room.name}.`
+      type: "note",
+      text: `${this.name} left ${this.room.name}.`,
     });
   }
 }

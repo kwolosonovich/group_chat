@@ -1,18 +1,18 @@
 /** app for groupchat */
 
-const express = require('express');
+const express = require("express");
 const app = express();
 
 // serve stuff in static/ folder
 
-app.use(express.static('static/'));
+app.use(express.static("static/"));
 
 /** Handle websocket chat */
 
 // allow for app.ws routes for websocket routes
-const wsExpress = require('express-ws')(app);
+const wsExpress = require("express-ws")(app);
 
-const ChatUser = require('./ChatUser');
+const ChatUser = require("./ChatUser");
 
 /** Handle a persistent connection to /chat/[roomName]
  *
@@ -23,7 +23,7 @@ const ChatUser = require('./ChatUser');
  * The `ws.send` method is how we'll send messages back to that socket.
  */
 
-app.ws('/chat/:roomName', function(ws, req, next) {
+app.ws("/chat/:roomName", function (ws, req, next) {
   try {
     const user = new ChatUser(
       ws.send.bind(ws), // fn to call to message this user
@@ -32,7 +32,7 @@ app.ws('/chat/:roomName', function(ws, req, next) {
 
     // register handlers for message-received, connection-closed
 
-    ws.on('message', function(data) {
+    ws.on("message", function (data) {
       try {
         user.handleMessage(data);
       } catch (err) {
@@ -40,7 +40,7 @@ app.ws('/chat/:roomName', function(ws, req, next) {
       }
     });
 
-    ws.on('close', function() {
+    ws.on("close", function () {
       try {
         user.handleClose();
       } catch (err) {
@@ -59,7 +59,7 @@ app.ws('/chat/:roomName', function(ws, req, next) {
  *
  * */
 
-app.get('/:roomName', function(req, res, next) {
+app.get("/:roomName", function (req, res, next) {
   res.sendFile(`${__dirname}/chat.html`);
 });
 
